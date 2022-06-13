@@ -1,15 +1,16 @@
-import Layout from '../layout/dashboardLayout'
+import AuthLayout from '../layout/authLayout'
+import LoginForm from "../components/login/loginForm";
 
 export default function Page() {
-  return {
-    /** Your content */
-  }
+  return (
+      <LoginForm/>
+  )
 }
 
 Page.getLayout = function getLayout(page) {
   return (
-      <Layout>
+      <AuthLayout>
           {page}
-      </Layout>
+      </AuthLayout>
   )
 }
