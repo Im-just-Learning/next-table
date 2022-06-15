@@ -12,7 +12,7 @@ const day = 'Понедельник'
 export default function GroupsTable() {
     return (
         <>
-            <CallModal></CallModal>
+            {/*<CallModal/>*/}
             <div className="px-4 sm:px-6 lg:px-8">
                 <div className="lg:flex lg:items-center">
                     <div className="lg:flex-auto">

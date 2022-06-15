@@ -9,7 +9,7 @@ const day = '07.06.2022'
 export default function ListChanges() {
     return (
         <>
-            <LessonsModal/>
+            {/*<LessonsModal/>*/}
             <div className="px-4 sm:px-6 lg:px-8">
                 <div className="lg:flex lg:items-center">
                     <div className="lg:flex-auto">

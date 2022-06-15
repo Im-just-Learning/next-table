@@ -1,7 +1,12 @@
-import React from 'react';
+import React, {useContext} from 'react';
+import {useRouter} from "next/router";
 import {useEffect} from "react";
+import {Context} from "../pages/_app";
+import {observer} from "mobx-react-lite";
 
 const AuthLayout = ({children}) => {
+    const router = useRouter()
+    const {store} = useContext(Context);
     useEffect(() => {
         document.querySelector('body').classList.add('h-full')
     })
@@ -11,6 +16,18 @@ const AuthLayout = ({children}) => {
     useEffect(() => {
         document.querySelector('#__next').classList.add('h-full')
     })
+
+    if (store.isLoading){
+        return <>
+            <h1>Загрузка...</h1>
+        </>
+    }
+
+    if (store.isAuth){
+        router.push('/')
+    }
+
+
 
     return (
         <>
@@ -30,4 +47,4 @@ const AuthLayout = ({children}) => {
     );
 };
 
-export default AuthLayout;
+export default observer(AuthLayout);

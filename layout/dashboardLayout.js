@@ -1,26 +1,25 @@
-import {useState, useEffect, Fragment} from 'react'
+import {useState, useEffect, Fragment, useContext} from 'react'
 import {Dialog, Transition} from '@headlessui/react'
 import {
     BellIcon, BookOpenIcon,
     CalendarIcon,
-    ChartBarIcon,
-    FolderIcon,
-    HomeIcon,
-    InboxIcon,
-    MenuIcon, UserGroupIcon,
-    UsersIcon,
+    MenuIcon,
+    UserGroupIcon,
     XIcon,
 } from '@heroicons/react/outline'
 import Image from "next/image";
 import logo from "../public/logo.svg";
 import Link from "next/link";
 import {useRouter} from "next/router";
+import {Context} from "../pages/_app";
+import {observer} from "mobx-react-lite";
+import ActiveLink from "../components/layout/ActiveLink";
 
 const navigation = [
-    {name: 'Журнал изменений', href: '/day-changes', icon: CalendarIcon, current: true},
-    {name: 'Расписание занятий', href: '/lessons-table', icon: BookOpenIcon, current: false},
-    {name: 'Расписание звонков', href: '/call-table', icon: BellIcon, current: false},
-    {name: 'Список групп', href: '/groups', icon: UserGroupIcon, current: false},
+    {name: 'Журнал изменений', href: '/day-changes', icon: CalendarIcon},
+    {name: 'Расписание занятий', href: '/lessons-table', icon: BookOpenIcon},
+    {name: 'Расписание звонков', href: '/call-table', icon: BellIcon},
+    {name: 'Список групп', href: '/groups', icon: UserGroupIcon},
 ]
 
 function classNames(...classes) {
@@ -29,7 +28,18 @@ function classNames(...classes) {
 }
 
 
-export default function DashboardLayout({children}) {
+
+const DashboardLayout = ({children}) => {
+    const {store} = useContext(Context);
+    const router = useRouter()
+    useEffect(() => {
+        if (!store.isAuth){
+            router.push('/login')
+        }
+    }, [store.isAuth]);
+
+    const [nav, setNav] = useState(navigation);
+
     const [sidebarOpen, setSidebarOpen] = useState(false)
     useEffect(() => {
         document.querySelector('body').classList.add('h-full')
@@ -37,7 +47,8 @@ export default function DashboardLayout({children}) {
     useEffect(() => {
         document.querySelector('html').classList.add('h-full', 'bg-white')
     })
-    const router = useRouter()
+
+
 
     return (
         <>
@@ -95,21 +106,19 @@ export default function DashboardLayout({children}) {
                                         />
                                     </div>
                                     <nav className="mt-5 px-2 space-y-1">
-                                        {navigation.map((item) => (
-                                            <Link key={item.name} href={item.href}>
+                                        {nav.map((item) => (
+                                            <ActiveLink href={item.href} key={item.name} activeClassName='bg-gray-100 text-teal-400 group flex items-center px-2 py-2 text-sm rounded-md font-medium'>
                                                 <a
-                                                    className={classNames(
-                                                        item.current
-                                                            ? 'bg-teal-100 text-gray-400'
-                                                            : 'text-gray-400 hover:bg-gray-50 text-gray-500 hover:bg-opacity-75',
-                                                        'group flex items-center px-2 py-2 text-sm rounded-md'
-                                                    )}
+                                                    className='text-gray-400 hover:bg-gray-50 text-gray-500 hover:bg-opacity-75 group flex items-center px-2 py-2 text-sm rounded-md font-medium'
                                                 >
-                                                    <item.icon className={classNames(item.current ? 'text-gray-400 bg-teal-100' : 'text-gray-300', 'mr-3 flex-shrink-0 h-6 w-6')}
-                                                               aria-hidden="true"/>
+                                                    <ActiveLink href={item.href} activeClassName='text-teal-400 bg-gray-100 mr-3 flex-shrink-0 h-6 w-6'>
+                                                        <item.icon className='text-gray-300 mr-3 flex-shrink-0 h-6 w-6'
+                                                                   aria-hidden="true"/>
+                                                    </ActiveLink>
                                                     {item.name}
+
                                                 </a>
-                                            </Link>
+                                            </ActiveLink>
                                         ))}
                                     </nav>
                                 </div>
@@ -135,21 +144,23 @@ export default function DashboardLayout({children}) {
                                 />
                             </div>
                             <nav className="mt-5 flex-1 px-2 space-y-1 ">
-                                {navigation.map((item) => (
-                                    <Link href={item.href} key={item.name}>
+                                {nav.map((item) => (
+
+                                    <ActiveLink href={item.href} key={item.name} activeClassName='bg-gray-100 text-teal-400 group flex items-center px-2 py-2 text-sm rounded-md font-medium'>
                                         <a
-                                            className={classNames(
-                                                item.current ? 'bg-gray-100 text-teal-400' : 'text-gray-400 hover:bg-gray-50 text-gray-500 hover:bg-opacity-75',
-                                                'group flex items-center px-2 py-2 text-sm rounded-md font-medium'
-                                            )}
+                                            className='text-gray-400 hover:bg-gray-50 text-gray-500 hover:bg-opacity-75 group flex items-center px-2 py-2 text-sm rounded-md font-medium'
                                         >
-                                            <item.icon className={classNames(item.current ? 'text-teal-400 bg-gray-100' : 'text-gray-300', 'mr-3 flex-shrink-0 h-6 w-6')}
-                                                       aria-hidden="true"/>
-                                            {item.name}
+                                            <ActiveLink href={item.href} activeClassName='text-teal-400 bg-gray-100 mr-3 flex-shrink-0 h-6 w-6'>
+                                                <item.icon className='text-gray-300 mr-3 flex-shrink-0 h-6 w-6'
+                                                           aria-hidden="true"/>
+                                            </ActiveLink>
+                                                {item.name}
+
                                         </a>
-                                    </Link>
+                                    </ActiveLink>
                                 ))}
                             </nav>
+                            <button type='button' onClick={() => store.logout()}>Выйти</button>
                         </div>
                     </div>
                 </div>
@@ -174,3 +185,6 @@ export default function DashboardLayout({children}) {
         </>
     )
 }
+
+
+export default observer(DashboardLayout)

@@ -2,6 +2,7 @@ import {useContext, useState} from "react";
 import logo from '../../public/logo.svg'
 import Image from "next/image";
 import {Context} from "../../pages/_app";
+import {observer} from "mobx-react-lite";
 
 const LoginFrom = () => {
     const [username, setUsername] = useState('');
@@ -28,7 +29,7 @@ const LoginFrom = () => {
 
             <div className="mt-8">
                 <div className="mt-6">
-                    <form className="space-y-6">
+                    <div className="space-y-6">
                         <div>
                             <label htmlFor="username" className="block text-sm font-medium text-gray-700">
                                 Логин
@@ -73,11 +74,11 @@ const LoginFrom = () => {
                                 Войти как редактор
                             </button>
                         </div>
-                    </form>
+                    </div>
                 </div>
             </div>
         </div>
     );
 };
 
-export default LoginFrom;
+export default observer( LoginFrom );

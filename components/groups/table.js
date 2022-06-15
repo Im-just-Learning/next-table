@@ -1,16 +1,22 @@
 import GroupModal from "./modal";
+import {useContext, useEffect, useState} from "react";
+import {Context} from "../../pages/_app";
+import {observer} from "mobx-react-lite";
+import Link from "next/link";
+import GroupEditModal from "./editModal";
 
-const groups = [
-    { name: 'П-14-18', course: 4 },
-    { name: 'П-15-18', course: 4 },
-    { name: 'П-16-18', course: 2 },
-    { name: 'П-17-18', course: 3 },
-]
+export default observer(GroupsTable)
 
-export default function GroupsTable() {
+function GroupsTable() {
+    const {store} = useContext(Context)
+
+    useEffect(() => {
+        store.groupsGetAll()
+    }, []);
+
+
     return (
         <>
-            <GroupModal></GroupModal>
             <div className="px-4 sm:px-6 lg:px-8">
                 <div className="sm:flex sm:items-center">
                     <div className="sm:flex-auto">
@@ -20,8 +26,10 @@ export default function GroupsTable() {
                         </p>
                     </div>
                     <div className="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
+                        <GroupModal show={store.isAddShow}/>
                         <button
                             type="button"
+                            onClick={()=>store.setAddShow(true)}
                             className="ml-3 inline-flex items-center justify-center rounded-md border border-transparent bg-teal-400 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-teal-600 focus:outline-none focus:ring-2 focus:ring-teal-400 focus:ring-offset-2 sm:w-auto"
                         >
                             Добавить группу
@@ -47,16 +55,20 @@ export default function GroupsTable() {
                                     </tr>
                                     </thead>
                                     <tbody className="divide-y divide-gray-200 bg-white">
-                                    {groups.map((group) => (
-                                        <tr key={group.name}>
-                                            <td className="whitespace-nowrap py-4 pl-4 text-sm text-center font-medium text-gray-900 sm:pl-6">
-                                                {group.name}
+                                    {store.groupsList.map((group) => (
+                                        <tr key={group.id}>
+                                            <td className="whitespace-nowrap py-4 pl-4 text-sm text-center text-gray-900 sm:pl-6">
+                                                {group.groupNumber}
                                             </td>
-                                            <td className="whitespace-nowrap px-3 py-4 text-sm text-right text-gray-500">{group.course}</td>
+                                            <td className="whitespace-nowrap px-3 py-4 text-sm text-right text-gray-500">{group.yearOfStudy}</td>
                                             <td className="whitespace-nowrap px-3 py-4 text-sm text-right text-gray-500 pr-4 sm:pr-6">
-                                                <a href="#" className="text-teal-500 hover:text-teal-600 ">
+                                                <GroupEditModal show={store.isEditShow} group={group}/>
+                                                <button
+                                                    onClick={()=>store.setEditShow(true)}
+                                                    type='button'
+                                                    className="text-sm text-teal-500 hover:text-teal-600">
                                                     Редактировать
-                                                </a>
+                                                </button>
                                             </td>
                                         </tr>
                                     ))}

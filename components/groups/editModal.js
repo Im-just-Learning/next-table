@@ -5,20 +5,20 @@ import {ExclamationIcon} from '@heroicons/react/outline'
 import {Context} from "../../pages/_app";
 import {observer} from "mobx-react-lite";
 
-export default observer(GroupModal)
-function GroupModal({show}) {
+export default observer(GroupEditModal)
+function GroupEditModal({show, group}) {
 
-    const saveForm = (groupNumber, yearOfStudy)=>{
-        store.groupAdd(groupNumber, yearOfStudy)
+    const [groupNumber, setGroupNumber] = useState(group.groupNumber);
+    const [yearOfStudy, setYearOfStudy] = useState(group.yearOfStudy);
+
+    const {store} = useContext(Context)
+    const saveForm = (group, groupNumber, yearOfStudy)=>{
+        store.groupEdit(group.id, groupNumber, yearOfStudy)
         setClose(false)
     }
-
     const setClose = (bool) => {
-        store.setAddShow(bool)
+        store.setEditShow(bool)
     }
-    const {store} = useContext(Context)
-    const [groupNumber, setGroupNumber] = useState('');
-    const [yearOfStudy, setYearOfStudy] = useState('');
 
     const cancelButtonRef = useRef(null)
 
