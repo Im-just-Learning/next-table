@@ -4,6 +4,7 @@ import {Context} from "../../pages/_app";
 import {observer} from "mobx-react-lite";
 import Link from "next/link";
 import GroupEditModal from "./editModal";
+import OneGroup from "./oneGroup";
 
 export default observer(GroupsTable)
 
@@ -56,21 +57,7 @@ function GroupsTable() {
                                     </thead>
                                     <tbody className="divide-y divide-gray-200 bg-white">
                                     {store.groupsList.map((group) => (
-                                        <tr key={group.id}>
-                                            <td className="whitespace-nowrap py-4 pl-4 text-sm text-center text-gray-900 sm:pl-6">
-                                                {group.groupNumber}
-                                            </td>
-                                            <td className="whitespace-nowrap px-3 py-4 text-sm text-right text-gray-500">{group.yearOfStudy}</td>
-                                            <td className="whitespace-nowrap px-3 py-4 text-sm text-right text-gray-500 pr-4 sm:pr-6">
-                                                <GroupEditModal show={store.isEditShow} group={group}/>
-                                                <button
-                                                    onClick={()=>store.setEditShow(true)}
-                                                    type='button'
-                                                    className="text-sm text-teal-500 hover:text-teal-600">
-                                                    Редактировать
-                                                </button>
-                                            </td>
-                                        </tr>
+                                        <OneGroup group={group} key={group.id}/>
                                     ))}
                                     </tbody>
                                 </table>

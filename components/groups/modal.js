@@ -73,6 +73,7 @@ function GroupModal({show}) {
                                                         </label>
                                                         <div className="mt-1">
                                                             <input
+                                                                required
                                                                 type="text"
                                                                 name="groupNumber"
                                                                 id="groupNumber"
@@ -90,6 +91,7 @@ function GroupModal({show}) {
                                                         </label>
                                                         <div className="mt-1">
                                                             <input
+                                                                required
                                                                 type="text"
                                                                 name="yearOfStudy"
                                                                 id="yearOfStudy"
