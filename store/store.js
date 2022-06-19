@@ -5,6 +5,8 @@ import {API_URL} from "../http";
 import GroupsService from "../services/GroupsService";
 import CallsService from "../services/CallsService";
 import LessonsService from "../services/LessonsService";
+import DayChangesService from "../services/DayChangesService";
+import { format } from 'date-fns'
 
 export default class Store{
 
@@ -152,7 +154,7 @@ export default class Store{
         },
     ]
 
-    currentDayId = 0
+    currentDayId
 
     setCurrentDayId = (newId)=>{
         this.currentDayId = newId
@@ -170,6 +172,15 @@ export default class Store{
             console.log(e.response?.data?.title)
         }
     }
+
+    async callsDefineCurrent(day){
+        try {
+            this.setCurrentDayId(day)
+        } catch (e) {
+            console.log(e.response?.data?.title)
+        }
+    }
+
     /*dayOfWeek, position, startTime, endTime*/
     async callAdd(dayId, addedCall){
         /*try {
@@ -195,9 +206,9 @@ export default class Store{
 
     /* Lessons */
 
-    lessonsList = []
+    /*lessonsList = []
 
-    currentGroup = this.groupsList[0]
+    currentGroup = {}
 
     setLessonsList = (data)=>{
         this.lessonsList = data
@@ -214,8 +225,105 @@ export default class Store{
         }catch (e) {
             console.log(e.response?.data?.title)
         }
+    }*/
+
+    currentGroup
+
+    setCurrentGroup = (data) =>{
+        this.currentGroup = data
     }
 
+    lessonsList = []
+
+    setLessonsList = (data) =>{
+        this.lessonsList = data
+    }
+
+    async lessonsGet(id){
+        try{
+            const response = await LessonsService.all(id.id)
+            this.setLessonsList(response.data)
+        }catch (e) {
+            console.log(e.response?.data?.title)
+        }
+    }
+
+    async lessonsDayAdd(name){
+        try {
+            const dayId = this.daysOfWeek.filter((dw)=>dw.name === name)[0].id
+            const response = await LessonsService.add(this.currentGroup.id, dayId)
+            const updateResponse = await LessonsService.all(this.currentGroup.id)
+            this.setLessonsList(updateResponse.data)
+        } catch (e) {
+            console.log(e.response?.data?.title)
+        }
+    }
+
+    async lessonsDayDelete(id){
+        try {
+            const response = await LessonsService.delete(id)
+            const updateResponse = await LessonsService.all(this.currentGroup.id)
+            this.setLessonsList(updateResponse.data)
+        } catch (e) {
+            console.log(e.response?.data?.title)
+        }
+    }
+
+
     /* End lessons */
+
+    /* Changes */
+
+    changesList = []
+
+    setChangesList = (data)=>{
+        this.changesList = data
+    }
+
+    changesDates = []
+
+    setChangesDates = (data)=>{
+        this.changesDates = data
+    }
+
+    currentDate = {}
+
+    setCurrentDate(data){
+        this.currentDate = data
+    }
+
+    changesDay = {}
+
+    setChangesDay(data){
+        this.changesDay = data
+    }
+
+    async changesBrief(){
+        try {
+            const response = await DayChangesService.allBrief()
+            const data = response.data.map((cl)=>{
+                cl.date = format(Date.parse(cl.date),'dd.MM.yyyy')
+                cl.id
+            })
+            this.setChangesList(response.data)
+        } catch (e) {
+            console.log(e.response?.data?.title)
+        }
+    }
+
+    async changesDatesMapping(){
+        this.setCurrentDate(this.changesList[this.changesList.length - 1])
+    }
+
+    async changesGetDay(changeId){
+        try {
+            const response = await DayChangesService.getDay(changeId)
+            this.setChangesDay(response.data)
+        } catch (e) {
+            console.log(e.response?.data?.title)
+        }
+    }
+
+    /* End changes */
 
 }

@@ -13,12 +13,10 @@ function Selector() {
 
     const days = store.daysOfWeek
 
-    const currentDay = store.daysOfWeek.filter((day)=>day.id === store.currentDayId)
-
-    const [selected, setSelected] = useState(store.daysOfWeek[0])
+    const [selected, setSelected] = useState(store.currentDayId)
 
     useEffect(()=>{
-        setDay(selected.id)
+        setDay(selected)
         store.callsGetDay(selected.id)
     }, [selected])
 

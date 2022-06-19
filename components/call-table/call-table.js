@@ -1,8 +1,8 @@
+import {observer} from "mobx-react-lite";
 import Selector from "./selector";
 import {useRef, useState, Fragment, useContext, useEffect} from "react";
 import {Dialog, Transition} from "@headlessui/react";
 import {Context} from "../../pages/_app";
-import {observer} from "mobx-react-lite";
 import EditForm from "./editForm";
 
 
@@ -14,25 +14,13 @@ function GroupsTable(){
 
     const {store} = useContext(Context);
 
-    const currentDay = store.daysOfWeek[store.currentDayId]
-
-    console.log(currentDay)
-
-    useEffect(()=>{
-        store.callsGetDay(currentDay.id)
-        setPairsList(store.callsList)
-    }, [])
-
-    const [pairsList, setPairsList] = useState(store.callsList);
-
-
 
     return (
         <>
             <div className="px-4 sm:px-6 lg:px-8">
                 <div className="lg:flex lg:items-center">
                     <div className="lg:flex-auto">
-                        <h1 className="text-xl font-semibold text-gray-900">Расписание звонков - <span className='text-teal-400'>{currentDay.name}</span></h1>
+                        <h1 className="text-xl font-semibold text-gray-900">Расписание звонков - <span className='text-teal-400'>{store.currentDayId.name}</span></h1>
                         <p className="mt-2 text-sm text-gray-700">
                             Список, включающий порядок и время начала/окончания ленты.
                         </p>
@@ -67,13 +55,15 @@ function GroupsTable(){
                                     </tr>
                                     </thead>
                                     <tbody className="divide-y divide-gray-200 bg-white">
-                                        {pairsList.length? pairsList.map((pair) => (
+                                        {store.callsList.length? store.callsList.map((pair) => (
                                             <tr key={pair.id}>
                                                 <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm text-center text-gray-900 sm:pl-6">{pair.position}</td>
                                                 <td className="whitespace-nowrap px-3 py-4 text-sm text-center text-gray-900">{pair.startTime}</td>
                                                 <td className="whitespace-nowrap py-4 pl-3 pr-4 text-sm text-center text-gray-900 sm:pr-6">{pair.endTime}</td>
                                             </tr>
-                                        )):<span>Список пуст</span>
+                                            )):<tr>
+                                                <td className='py-4 text-center'>Список пуст</td>
+                                            </tr>
                                     }
                                     </tbody>
                                 </table>
@@ -113,7 +103,7 @@ function GroupsTable(){
                         >
                             <div
                                 className="relative inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-3xl sm:w-full sm:p-6">
-                                <EditForm callsList={pairsList} dayName={currentDay.name}/>
+                                {/*<EditForm callsList={pairsList} dayName={currentDay}/>*/}
                             </div>
                         </Transition.Child>
                     </div>

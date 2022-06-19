@@ -1,25 +1,34 @@
-import { PencilIcon } from "@heroicons/react/outline";
+import {PencilIcon} from "@heroicons/react/outline";
 import OneTable from "./day-change-table";
 import Selector from "./selector";
-import LessonsModal from "./modal";
+import {useContext, useEffect} from "react";
+import {Context} from "../../pages/_app";
+import {observer} from "mobx-react-lite";
 
+function ListChanges() {
+    const {store} = useContext(Context);
 
-const day = '07.06.2022'
+    const date = store.currentDate
 
-export default function ListChanges() {
+    useEffect(() => {
+        store.changesGetDay(date.id)
+    }, [date]);
+
+    const changes = store.changesDay
+
     return (
         <>
-            {/*<LessonsModal/>*/}
             <div className="px-4 sm:px-6 lg:px-8">
                 <div className="lg:flex lg:items-center">
                     <div className="lg:flex-auto">
-                        <h1 className="text-xl font-semibold text-gray-900">Изменение в расписании - <span className='text-teal-400'>{day}</span></h1>
+                        <h1 className="text-xl font-semibold text-gray-900">Изменение в расписании - <span
+                            className='text-teal-400'>{date.date}</span></h1>
                         <p className="mt-2 text-sm text-gray-700">
                             Список, изменения в расписании на выбранную дату.
                         </p>
                     </div>
                     <div className="flex mt-4 lg:mt-0 lg:ml-16 lg:flex-none">
-                        <Selector></Selector>
+                        <Selector/>
                         <button
                             type="button"
                             className="ml-3 inline-flex items-center justify-center rounded-md border border-transparent bg-teal-400 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-teal-600 focus:outline-none focus:ring-2 focus:ring-teal-400 focus:ring-offset-2 sm:w-auto"
@@ -30,9 +39,10 @@ export default function ListChanges() {
                 </div>
                 <div className="mt-8 flex flex-col">
                     {
-                        pairsOnWeek.map((pairsOnDay) => (
+                        /*pairsOnWeek.map((pairsOnDay) => (
                             <OneTable pairsPurDay={pairsOnDay} key={pairsOnDay.num}/>
-                        ))
+                        ))*/
+                        <OneTable pairsPurDay={changes}/>
                     }
                 </div>
             </div>
@@ -41,12 +51,14 @@ export default function ListChanges() {
     )
 }
 
+export default observer(ListChanges)
 
+/*
 const pairsOnWeek = [
     {
         num: '1',
         name: 'П-14-18',
-        pairs:[
+        pairs: [
             {
                 num: '1',
                 place: 'С-5',
@@ -70,7 +82,7 @@ const pairsOnWeek = [
     {
         num: '2',
         name: 'П-15-18',
-        pairs:[
+        pairs: [
             {
                 num: '1',
                 place: 'С-5',
@@ -91,4 +103,4 @@ const pairsOnWeek = [
             }
         ]
     },
-]
+]*/

@@ -1,16 +1,21 @@
+import {useContext} from "react";
+import {Context} from "../../pages/_app";
+
 const OneTable = ({pairsPurDay}) => {
+    const {store} = useContext(Context);
 
     console.log(pairsPurDay)
+
     return (
         <div className="pb-8 mt-2 -my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
             <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
                 <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 rounded-lg px-3 bg-white">
                     <div className="flex justify-between pt-3 px-2">
-                        <span className='text-2xl'>
-                            {pairsPurDay.name}
-                        </span>
+                        {/*<span className='text-2xl'>
+                            {}
+                        </span>*/}
                         <div className="">
-                            <button
+                           {/* <button
                                 type="button"
                                 className="ml-3 inline-flex items-center justify-center rounded-md border border-transparent bg-blue-400 px-4 py-2 text-sm font-medium text-blue-050 shadow-sm hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 sm:w-auto"
                             >
@@ -21,7 +26,7 @@ const OneTable = ({pairsPurDay}) => {
                                 className="ml-3 inline-flex items-center justify-center rounded-md border border-transparent bg-red-400 px-4 py-2 text-sm font-medium text-red-050 shadow-sm hover:bg-red-500 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-offset-2 sm:w-auto"
                             >
                                 Удалить
-                            </button>
+                            </button>*/}
                         </div>
                     </div>
                     <table className="min-w-full divide-y divide-teal-300">
@@ -42,14 +47,14 @@ const OneTable = ({pairsPurDay}) => {
                         </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-200 bg-white">
-                        {pairsPurDay.pairs.map((pair) => (
-                            <tr key={pair.num}>
-                                <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm text-center text-gray-900 sm:pl-6">{pair.num}</td>
-                                <td className="whitespace-nowrap px-3 py-4 text-sm text-center text-gray-900">{pair.place}</td>
-                                <td className="whitespace-nowrap px-3 py-4 text-sm text-center text-gray-900">{pair.name}</td>
-                                <td className="whitespace-nowrap py-4 pl-3 pr-4 text-sm text-center text-gray-900 sm:pr-6">{pair.teacher}</td>
+                        {pairsPurDay.listItems.length? pairsPurDay.listItems.map((pair) => (
+                            <tr key={pair.id}>
+                                <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm text-center text-gray-900 sm:pl-6">{pair.itemInfo.position}</td>
+                                <td className="whitespace-nowrap px-3 py-4 text-sm text-center text-gray-900">{pair.itemInfo.auditorium}</td>
+                                <td className="whitespace-nowrap px-3 py-4 text-sm text-center text-gray-900">{pair.itemInfo.subjectName}</td>
+                                <td className="whitespace-nowrap py-4 pl-3 pr-4 text-sm text-center text-gray-900 sm:pr-6">{pair.itemInfo.teacherInitials}</td>
                             </tr>
-                        ))}
+                        )):null}
                         </tbody>
                     </table>
                 </div>
