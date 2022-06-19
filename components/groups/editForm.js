@@ -25,7 +25,7 @@ const EditForm = ({groupData}) => {
             <div className="space-y-8 divide-y divide-gray-200 sm:space-y-5">
                 <div>
                     <div>
-                        <h3 className="text-lg leading-6 font-medium text-gray-900">Редактирование группы <span className='text-teal-400'>{groupData.groupNumber}</span></h3>
+                        <h3 className="text-lg leading-6 font-medium text-gray-900">Редактирование группы <span className='text-teal-400'>{groupNumber}</span></h3>
                     </div>
 
                     <div className="mt-6 sm:mt-5 space-y-6 sm:space-y-5">
@@ -78,10 +78,11 @@ const EditForm = ({groupData}) => {
             <div className="pt-5">
                 <div className="flex justify-end">
                     <button
+                        onClick={()=>store.groupDelete(id)}
                         type="button"
-                        className="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-400"
+                        className="bg-white py-2 px-4 border border-red-300 rounded-md shadow-sm text-sm font-medium text-red-700 hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-400"
                     >
-                        Отменить
+                        Удалить
                     </button>
                     <button
                         onClick={()=>saveForm(id, updatedGroup)}

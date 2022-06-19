@@ -1,11 +1,11 @@
 import $api from "../http";
 
-export default class GroupsService {
-    static async all(){
-        return $api.get('/schedule-service-api/v1/groups')
+export default class LessonsService {
+    static async all(groupId){
+        return $api.get(`/schedule-service-api/v1/schedule-lists?${groupId}`)
     }
 
-    static async add(groupNumber, yearOfStudy){
+    static async add(groupId, dayOfWeek){
         return $api.post('/schedule-service-api/v1/groups', {groupNumber, yearOfStudy})
     }
 

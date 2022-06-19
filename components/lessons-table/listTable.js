@@ -9,7 +9,6 @@ const group = 'П-14-18'
 export default function ListTable() {
     return (
         <>
-            {/*<LessonsModal/>*/}
             <div className="px-4 sm:px-6 lg:px-8">
                 <div className="lg:flex lg:items-center">
                     <div className="lg:flex-auto">

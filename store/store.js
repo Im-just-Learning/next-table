@@ -3,6 +3,7 @@ import AuthService from "../services/AuthService";
 import axios from "axios";
 import {API_URL} from "../http";
 import GroupsService from "../services/GroupsService";
+import CallsService from "../services/CallsService";
 
 export default class Store{
 
@@ -37,21 +38,17 @@ export default class Store{
 
     async login(username, password){
         try {
-            /*const response = await AuthService.login(username, password)
+            const response = await AuthService.login(username, password)
             localStorage.setItem('token', response.data.token)
-            localStorage.setItem('un', username)
-            localStorage.setItem('pw', password)*/
             this.setAuth(true)
         } catch (e) {
-            console.log(e.response?.data?.title)
+            console.log(e)
         }
     }
 
     async logout(){
         try {
             localStorage.removeItem('token')
-            localStorage.removeItem('un')
-            localStorage.removeItem('pw')
             this.setAuth(false)
         } catch (e) {
             console.log(e.response?.data?.title)
@@ -59,17 +56,21 @@ export default class Store{
     }
 
     async checkAuth(){
-        this.setAuth(true)
-        /*this.setLoading(true)
+        this.setLoading(true)
         try {
-            const response = await AuthService.login(localStorage.getItem('un'), localStorage.getItem('pw'))
+            const response = await axios.post(`${API_URL}/identity-service-api/v1/account/refresh-token`, {}, {
+                withCredentials: true,
+                headers:{
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }
+            })
             localStorage.setItem('token', response.data.token)
             this.setAuth(true)
         } catch (e) {
             console.log(e.response?.data?.title)
         } finally {
             this.setLoading(false)
-        }*/
+        }
     }
 
     /*End auth*/
@@ -77,84 +78,51 @@ export default class Store{
     /*Groups*/
 
     groupsList = []
+    setGroupsList = (newList)=>{
+        this.groupsList = newList
+    }
 
     async groupsGetAll(){
-        /*const response = await GroupsService.all()
-        console.log(response)
         try {
             const response = await GroupsService.all()
-            console.log(response)
+            this.setGroupsList(response.data)
         } catch (e) {
             console.log(e.response?.data?.title)
-        }*/
-
-        this.groupsList = [
-            {
-                'id': '123er123e',
-                'groupNumber': 'П-14-18',
-                'yearOfStudy': 4
-            },
-            {
-                'id': '123er1233',
-                'groupNumber': 'П-15-18',
-                'yearOfStudy': 3
-            }
-        ]
+        }
     }
 
     async groupAdd(groupNumber, yearOfStudy){
-        this.groupsList.push(
-            {
-                'id': `123314151r${this.groupsList.length}`,
-                'groupNumber': groupNumber,
-                'yearOfStudy': parseInt(yearOfStudy)
-            }
-        )
+        try {
+            const response = await GroupsService.add(groupNumber, yearOfStudy)
+            this.groupsGetAll()
+        } catch (e) {
+            console.log(e.response?.data?.title)
+        }
     }
 
     async groupEdit(id, editedGroup){
-        this.groupsList = (this.groupsList.map((group)=>group.id === id? editedGroup : group))
+        try {
+            const response = await GroupsService.edit(editedGroup.groupNumber, editedGroup.yearOfStudy, id)
+            this.groupsGetAll()
+        } catch (e) {
+            console.log(e.response?.data?.title)
+        }
     }
 
     async groupDelete(id){
-        this.groupsList = this.groupsList.filter((group)=>group !== id)
-        console.log(this.groupsList)
+        try {
+            const response = await GroupsService.delete(id)
+            this.groupsGetAll()
+        } catch (e) {
+            console.log(e.response?.data?.title)
+        }
     }
 
     /*End groups*/
 
     /* Calls */
 
-    callsList = [
-        {
-            dayOfWeek: 1,
-            listItems: [
-                {
-                    id: '1231231541f1df23',
-                    position: 1,
-                    startTime: '8:30',
-                    endTime: '10:10',
-                },
-            ]
-        },
-        {
-            dayOfWeek: 2,
-            listItems: [
-                {
-                    id: '1231231541f1ds4',
-                    position: 1,
-                    startTime: '8:30',
-                    endTime: '10:10',
-                },
-                {
-                    id: '1231231541f1ds5',
-                    position: 2,
-                    startTime: '10:30',
-                    endTime: '11:40',
-                }
-            ]
-        }
-    ]
+    callsList = []
 
     daysOfWeek = [
         {
@@ -183,25 +151,35 @@ export default class Store{
         },
     ]
 
-    async callsGetDay(day){
-        /*const response = await GroupsService.all()
-        console.log(response)
+    currentDayId = 0
+
+    setCurrentDayId = (newId)=>{
+        this.currentDayId = newId
+    }
+
+    setCallsList = (data)=>{
+        this.callsList = data
+    }
+
+    async callsGetDay(dayId){
         try {
-            const response = await GroupsService.all()
+            const response = await CallsService.all(dayId)
+            this.setCallsList(response.data)
             console.log(response)
         } catch (e) {
             console.log(e.response?.data?.title)
-        }*/
-
+        }
     }
-
-    async callAdd(day, addedCall){
-        this.callsList = this.callsList.map((dc)=>
-        {
-            if (dc.dayOfWeek === day){
-                dc.listItems.push(addedCall)
-            }
-        })
+    /*dayOfWeek, position, startTime, endTime*/
+    async callAdd(dayId, addedCall){
+        /*try {
+            const response = await CallsService.add({
+                da
+            })
+            this.groupsGetAll()
+        } catch (e) {
+            console.log(e.response?.data?.title)
+        }*/
     }
 
     async callEdit(id, editedGroup){
@@ -214,5 +192,17 @@ export default class Store{
     }
 
     /* End calls */
+
+    /* Lessons */
+
+    lessonsList = []
+
+    currentGroup = this.groupsList[0]
+
+    setCurrentGroup=(group)=>{
+        this.currentGroup = group
+    }
+
+    /* End lessons */
 
 }

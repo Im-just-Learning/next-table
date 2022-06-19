@@ -1,22 +1,30 @@
-import {Fragment, useState} from 'react'
+import {Fragment, useState, useContext, useEffect} from 'react'
 import {Listbox, Transition} from '@headlessui/react'
 import {CheckIcon, SelectorIcon} from '@heroicons/react/solid'
-
-const days = [
-    {id: 1, name: 'Понедельник'},
-    {id: 2, name: 'Вторник'},
-    {id: 3, name: 'Среда'},
-    {id: 4, name: 'Четверг'},
-    {id: 5, name: 'Пятница'},
-    {id: 6, name: 'Суббота'},
-]
+import {Context} from "../../pages/_app";
 
 function classNames(...classes) {
     return classes.filter(Boolean).join(' ')
 }
 
 export default function Selector() {
-    const [selected, setSelected] = useState(days[3])
+    const {store} = useContext(Context);
+
+    const days = store.daysOfWeek
+
+    const currentDay = store.daysOfWeek.filter((dw)=>dw.id === store.currentDayId)[0]
+
+    const [selected, setSelected] = useState(currentDay)
+
+    useEffect(()=>{
+        setDay(selected.id)
+        store.callsGetDay(selected.id)
+    }, [selected])
+
+    const setDay = (id) => {
+        store.setCurrentDayId(id)
+    }
+
 
     return (
         <Listbox value={selected} onChange={setSelected}>
@@ -33,8 +41,8 @@ export default function Selector() {
                         >
                             <span className="block truncate">{selected.name}</span>
                             <span className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
-                <SelectorIcon className="h-5 w-5 text-gray-400" aria-hidden="true"/>
-              </span>
+                                <SelectorIcon className="h-5 w-5 text-gray-400" aria-hidden="true"/>
+                            </span>
                         </Listbox.Button>
 
                         <Transition
