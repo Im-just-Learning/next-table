@@ -10,7 +10,7 @@ function EditForm({callsList, dayName}) {
                     </div>
 
                     {
-                        callsList.listItems.map((item)=>(
+                        callsList.map((item)=>(
                             <div className="mt-6 sm:mt-5 space-y-6 sm:space-y-5" key={item.id}>
                                 <div
                                     className="sm:grid sm:grid-cols-4 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">

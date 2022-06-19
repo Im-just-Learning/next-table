@@ -4,6 +4,7 @@ import axios from "axios";
 import {API_URL} from "../http";
 import GroupsService from "../services/GroupsService";
 import CallsService from "../services/CallsService";
+import LessonsService from "../services/LessonsService";
 
 export default class Store{
 
@@ -164,8 +165,7 @@ export default class Store{
     async callsGetDay(dayId){
         try {
             const response = await CallsService.all(dayId)
-            this.setCallsList(response.data)
-            console.log(response)
+            this.setCallsList(response.data.listItems)
         } catch (e) {
             console.log(e.response?.data?.title)
         }
@@ -199,8 +199,21 @@ export default class Store{
 
     currentGroup = this.groupsList[0]
 
-    setCurrentGroup=(group)=>{
-        this.currentGroup = group
+    setLessonsList = (data)=>{
+        this.lessonsList = data
+    }
+
+    setCurrentGroup=(id)=>{
+        this.currentGroup = this.groupsList.filter((group)=>group.id === id)
+    }
+
+    async lessonsGet(id){
+        try{
+            const response = await LessonsService.all(id)
+            this.setLessonsList(response.data)
+        }catch (e) {
+            console.log(e.response?.data?.title)
+        }
     }
 
     /* End lessons */

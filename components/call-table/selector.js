@@ -2,19 +2,20 @@ import {Fragment, useState, useContext, useEffect} from 'react'
 import {Listbox, Transition} from '@headlessui/react'
 import {CheckIcon, SelectorIcon} from '@heroicons/react/solid'
 import {Context} from "../../pages/_app";
+import {observer} from "mobx-react-lite";
 
 function classNames(...classes) {
     return classes.filter(Boolean).join(' ')
 }
 
-export default function Selector() {
+function Selector() {
     const {store} = useContext(Context);
 
     const days = store.daysOfWeek
 
-    const currentDay = store.daysOfWeek.filter((dw)=>dw.id === store.currentDayId)[0]
+    const currentDay = store.daysOfWeek.filter((day)=>day.id === store.currentDayId)
 
-    const [selected, setSelected] = useState(currentDay)
+    const [selected, setSelected] = useState(store.daysOfWeek[0])
 
     useEffect(()=>{
         setDay(selected.id)
@@ -94,3 +95,5 @@ export default function Selector() {
         </Listbox>
     )
 }
+
+export default observer(Selector)

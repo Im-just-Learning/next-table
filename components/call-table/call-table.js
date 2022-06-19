@@ -7,20 +7,25 @@ import EditForm from "./editForm";
 
 
 
-const GroupsTable = observer(()=>{
+function GroupsTable(){
     const [open, setOpen] = useState(false)
 
     const cancelButtonRef = useRef(null)
 
     const {store} = useContext(Context);
 
-    const currentDay = store.daysOfWeek.filter((dw)=>dw.id === store.currentDayId)[0]
+    const currentDay = store.daysOfWeek[store.currentDayId]
 
-    const [pairsList, setPairsList] = useState(store.callsList);
+    console.log(currentDay)
 
     useEffect(()=>{
         store.callsGetDay(currentDay.id)
+        setPairsList(store.callsList)
     }, [])
+
+    const [pairsList, setPairsList] = useState(store.callsList);
+
+
 
     return (
         <>
@@ -47,8 +52,6 @@ const GroupsTable = observer(()=>{
                     <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
                         <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
                             <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 rounded-lg px-3 bg-white">
-                                { !pairsList || empty(pairsList.listItems)?
-                                        <span className=''>Список расписания пуст</span>:
                                 <table className="min-w-full divide-y divide-teal-300">
                                     <thead className="bg-white">
                                     <tr>
@@ -64,17 +67,16 @@ const GroupsTable = observer(()=>{
                                     </tr>
                                     </thead>
                                     <tbody className="divide-y divide-gray-200 bg-white">
-                                        {pairsList.listItems.map((pair) => (
-                                            <tr key={pair.num}>
+                                        {pairsList.length? pairsList.map((pair) => (
+                                            <tr key={pair.id}>
                                                 <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm text-center text-gray-900 sm:pl-6">{pair.position}</td>
                                                 <td className="whitespace-nowrap px-3 py-4 text-sm text-center text-gray-900">{pair.startTime}</td>
                                                 <td className="whitespace-nowrap py-4 pl-3 pr-4 text-sm text-center text-gray-900 sm:pr-6">{pair.endTime}</td>
                                             </tr>
-                                        ))
+                                        )):<span>Список пуст</span>
                                     }
                                     </tbody>
                                 </table>
-                                }
                             </div>
                         </div>
                     </div>
@@ -119,7 +121,7 @@ const GroupsTable = observer(()=>{
             </Transition.Root>
         </>
     )
-})
+}
 
 
-export default GroupsTable
+export default observer(GroupsTable)

@@ -6,14 +6,18 @@ export default class LessonsService {
     }
 
     static async add(groupId, dayOfWeek){
-        return $api.post('/schedule-service-api/v1/groups', {groupNumber, yearOfStudy})
+        return $api.post(`/schedule-service-api/v1/schedule-lists?${groupId}`, {dayOfWeek})
     }
 
-    static async edit(groupNumber, yearOfStudy, id){
-        return $api.put(`/schedule-service-api/v1/groups/${id}`, {groupNumber, yearOfStudy})
+    static async getOne(id){
+        return $api.get(`/schedule-service-api/v1/schedule-lists?${id}`)
+    }
+
+    static async EditOne(id, editTable){
+        return $api.put(`/schedule-service-api/v1/schedule-lists?${id}`)
     }
 
     static async delete(id){
-        return $api.delete(`/schedule-service-api/v1/groups/${id}`)
+        return $api.delete(`/schedule-service-api/v1/schedule-lists?${id}`)
     }
 }

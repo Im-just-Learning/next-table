@@ -2,10 +2,8 @@ import React, {useEffect, useState} from 'react';
 import {Fragment, useRef, useContext} from "react";
 import {Dialog, Transition} from "@headlessui/react";
 import EditForm from "./editForm";
-import {Context} from "../../pages/_app";
 
 const OneGroup = ({group}) => {
-    const {store} = useContext(Context)
 
     const [show, setShow] = useState(false);
     const cancelButtonRef = useRef(null)
@@ -16,7 +14,7 @@ const OneGroup = ({group}) => {
 
     return (
         <>
-            <tr key={group.id}>
+            <tr>
                 <td className="whitespace-nowrap py-4 pl-4 text-sm text-center text-gray-900 sm:pl-6">
                     {group.groupNumber}
                 </td>

@@ -1,18 +1,25 @@
-import { PencilIcon } from "@heroicons/react/outline";
 import OneTable from "./oneTable";
 import Selector from "./selector";
-import LessonsModal from "./modal";
+import {observer} from "mobx-react-lite";
+import {useContext, useEffect, useState} from "react";
+import {Context} from "../../pages/_app";
 
+const ListTable = ()=>{
+    const {store} = useContext(Context);
+    useEffect(()=>{
+        store.groupsGetAll()
+    }, [store.currentGroup])
 
-const group = 'П-14-18'
+    const pairsOnWeek = store.lessonsGet(store.currentGroup)
 
-export default function ListTable() {
+    console.log(pairsOnWeek)
+
     return (
         <>
             <div className="px-4 sm:px-6 lg:px-8">
                 <div className="lg:flex lg:items-center">
                     <div className="lg:flex-auto">
-                        <h1 className="text-xl font-semibold text-gray-900">Расписание занятий - <span className='text-teal-400'>{group}</span></h1>
+                        <h1 className="text-xl font-semibold text-gray-900">Расписание занятий - <span className='text-teal-400'>{}</span></h1>
                         <p className="mt-2 text-sm text-gray-700">
                             Список, включающий день недели, порядок, название предмета, аудиторию и ФИО преподавателя.
                         </p>
@@ -28,90 +35,16 @@ export default function ListTable() {
                     </div>
                 </div>
                 <div className="mt-8 flex flex-col">
-                    {
+                    {/*{
                         pairsOnWeek.map((pairsOnDay) => (
-                            <OneTable pairsPurDay={pairsOnDay} key={pairsOnDay.num}/>
-                        ))
-                    }
+                            <span key={pairsOnDay.id}>{pairsOnDay}</span>*/}
+                            {/*/*<OneTable pairsPurDay={pairsOnDay} key={pairsOnDay.id}/>*/}
+                        {/*))
+                    }*/}
                 </div>
             </div>
         </>
 
     )
 }
-
-
-const pairsOnWeek = [
-    {
-        num: '1',
-        name: 'Понедельник',
-        pairs:[
-            {
-                num: '1',
-                place: 'С-5',
-                name: 'Теория разработки и защиты баз данных',
-                teacher: 'Ефименков А.Б.',
-            },
-            {
-                num: '2',
-                place: 'С-3',
-                name: 'Теория разработки и защиты баз данных',
-                teacher: 'Ефименков А.Б.',
-            },
-            {
-                num: '3',
-                place: 'К-410',
-                name: 'Системное программирование',
-                teacher: 'Гвоздиевская О.С.',
-            }
-        ]
-    },
-    {
-        num: '2',
-        name: 'Вторник',
-        pairs:[
-            {
-                num: '1',
-                place: 'С-5',
-                name: 'Теория разработки и защиты баз данных',
-                teacher: 'Ефименков А.Б.',
-            },
-            {
-                num: '2',
-                place: 'С-3',
-                name: 'Теория разработки и защиты баз данных',
-                teacher: 'Ефименков А.Б.',
-            },
-            {
-                num: '3',
-                place: 'К-410',
-                name: 'Системное программирование',
-                teacher: 'Гвоздиевская О.С.',
-            }
-        ]
-    },
-    {
-        num: '3',
-        name: 'Среда',
-        pairs:[
-            {
-                num: '1',
-                place: 'С-5',
-                name: 'Теория разработки и защиты баз данных',
-                teacher: 'Ефименков А.Б.',
-            },
-            {
-                num: '2',
-                place: 'С-3',
-                name: 'Теория разработки и защиты баз данных',
-                teacher: 'Ефименков А.Б.',
-            },
-            {
-                num: '3',
-                place: 'К-410',
-                name: 'Системное программирование',
-                teacher: 'Гвоздиевская О.С.',
-            }
-        ]
-    },
-]
+export default observer(ListTable)
